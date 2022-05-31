@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~@ng-select/ng-select/themes/material.theme.css";
+
+.select{
+    display: inline-block;
+    border: 1px solid #E9EDF2;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    padding-left: 10px;
+    min-width: 400px;
+}
+
+.ng-select .ng-arrow-wrapper .ng-arrow {
+    border: none;
+    padding: 0 12px;
+    display: block;
+    height: auto;
+    width: auto;
+    margin-bottom: -2px;
+}

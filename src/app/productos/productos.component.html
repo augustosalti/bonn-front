@@ -1,0 +1,283 @@
+<div class="card m-0">
+    <div class="card-body">
+        <div class="right">
+            <button class="btn btn-lg btn-outline-primary float-right" (click)="openModal(itemModal)"><i class="mdi mdi-bookmark-plus"></i> Nuevo</button>
+            <!-- <input type="text" placeholder="{{'Search'|translate}}" id="actividad" class="form-control busqueda" [(ngModel)]='searchTerm'> -->
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center bg-white" *ngIf='!items'>
+    <div class="spinner-border text-primary mb-3" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+ <div class="table-responsive" *ngIf="items">
+    <table class="table bg-white table-hover align-middle mb-0 no-wrap">
+        <thead>
+            <tr class="titulosLista">
+                <th role="button"><i class="mdi mdi-code-tags"></i> Codigo</th>
+                <th role="button" scope="col"><i class="mdi mdi-rename-box"></i> Nombre</th>
+                <th scope="col"><i class="mdi mdi-factory"></i> Proveedor</th>
+                <th scope="col"><i class="mdi mdi-auto-fix"></i> Modelo</th>
+                <th scope="col"><i class="mdi mdi-format-list-bulleted-type"></i> Tipo</th>
+                <th scope="col"><i class="mdi mdi-coin"></i> Precio</th>
+                <th scope="col"><i class="mdi mdi-bookmark-plus"></i> Stock</th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='let item of items | slice: (page-1) * 5 : (page-1) * 5 + pageSize ; let i = index;' id="{{ item.id }}"
+            (click)="openModal(editItemModal, item)">
+                <td>
+                    <span class="text-dark font-medium font-16">{{ item.codigo }}</span>
+                </td>
+                <td class="align-middle">
+                    <span *ngIf="item.nombre">{{ item.nombre }}</span>
+                </td>
+                <td class="align-middle">
+                    <span *ngIf="item.id_proveedor">{{ verProveedor(item.id_proveedor) }}</span>
+                </td>
+                <td class="align-middle">
+                    <span *ngIf="item.id_modelo">{{ verModelo(item.id_modelo) }}</span>
+                </td>
+                <td class="align-middle">
+                    <span *ngIf="item.id_tipo">{{ verTipo(item.id_tipo) }}</span>
+                </td>
+                <td class="align-middle">
+                    <span *ngIf="item.precio">{{ item.precio }}</span>
+                </td>
+                <td class="align-middle">
+                    <span *ngIf="item.stock">{{ item.stock }}</span>
+                </td>
+                <td class="align-middle" style="cursor: pointer;" (click)="deleteArticulo(item.id); $event.stopPropagation();">
+                    <span style="color: red;">X</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="collectionSize > 1" class="d-flex justify-content-center p-2 pt-3 bg-white border-top">
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+            <ng-template ngbPaginationFirst><i class="mdi mdi-arrow-left-bold-circle"></i></ng-template>
+            <ng-template ngbPaginationLast><i class="mdi mdi-arrow-right-bold-circle"></i></ng-template>
+            <ng-template ngbPaginationPrevious><i class="mdi mdi-arrow-left"></i></ng-template>
+            <ng-template ngbPaginationNext><i class="mdi mdi-arrow-right"></i></ng-template>
+            <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+            <ng-template ngbPaginationEllipsis>...</ng-template>
+        </ngb-pagination>
+    </div>
+</div>
+
+
+
+
+<ng-template #itemModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Producto</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      
+        <div class="container">
+            <div [hidden]="submitted">
+              <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+                <div class="form-group">
+                  <label for="name">Codigo</label>
+                  <input type="text" class="form-control" id="codigo" required [(ngModel)]="selectedCodigo" name="codigo" #name="ngModel">
+                </div>
+          
+                <div class="form-group">
+                  <label for="nombre">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" [(ngModel)]="selectedNombre" name="nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripcion</label>
+                    <input type="textbox" class="form-control" id="descripcion" [(ngModel)]="selectedDescripcion" name="descripcion">
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Precio</label>
+                    <input type="number" step=".01" class="form-control" id="precio" [(ngModel)]="selectedPrecio" name="precio">
+                </div>
+                
+                <div class="form-group">
+                    <label for="precioAnterior">Precio Anterior</label>
+                    <input type="number" step=".01" class="form-control" id="precioAnterior" [(ngModel)]="selectedPrecioAnterior" name="precioAnterior">
+                </div>
+
+                <div class="form-group">
+                    <label for="costo">Costo</label>
+                    <input type="number" step=".01" class="form-control" id="costo" [(ngModel)]="selectedCosto" name="costo">
+                </div>
+
+                <div class="form-group">
+                    <label for="ancho">Ancho</label>
+                    <input type="number" step=".01" class="form-control" id="ancho" [(ngModel)]="selectedAncho" name="ancho">
+                </div>
+
+                <div class="form-group">
+                    <label for="alto">Alto</label>
+                    <input type="number" step=".01" class="form-control" id="alto" [(ngModel)]="selectedAlto" name="alto">
+                </div>
+
+                <div class="form-group">
+                    <label for="profundo">Profundo</label>
+                    <input type="number" step=".01" class="form-control" id="profundo" [(ngModel)]="selectedProfundo" name="profundo">
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock</label>
+                    <input type="number" step=".01" class="form-control" id="stock" [(ngModel)]="selectedStock" name="stock">
+                </div>
+
+                <div *ngIf="proveedores && proveedores.length > 0">
+                    <label for="proveedor">Proveedor</label>
+                    <ng-select [items]="proveedores" (change)="addFilters();"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedProveedor" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+
+                <div *ngIf="tipos && tipos.length > 0">
+                    <label for="tipo">Tipo</label>
+                    <ng-select [items]="tipos"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedTipo" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+                <div *ngIf="modelosFilter && modelosFilter.length > 0">
+                    <label for="modelo">Modelo</label>
+                    <ng-select [items]="modelosFilter"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedModelo" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+                <div *ngIf="coloresFilter && coloresFilter.length > 0">
+                    <label for="color">Color</label>
+                    <ng-select [items]="coloresFilter"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedColor" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+          
+              </form>
+            </div>
+          </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); addArticulo();">Guardar</button>
+    </div>
+</ng-template>
+
+
+<ng-template #editItemModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Producto</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      
+        <div class="container">
+            <div [hidden]="submitted">
+              <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+                <div class="form-group">
+                  <label for="name">Codigo</label>
+                  <input type="text" class="form-control" id="codigo" required [(ngModel)]="selectedCodigo" name="codigo" #name="ngModel">
+                </div>
+          
+                <div class="form-group">
+                  <label for="nombre">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" [(ngModel)]="selectedNombre" name="nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripcion</label>
+                    <input type="textbox" class="form-control" id="descripcion" [(ngModel)]="selectedDescripcion" name="descripcion">
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Precio</label>
+                    <input type="number" step=".01" class="form-control" id="precio" [(ngModel)]="selectedPrecio" name="precio">
+                </div>
+                
+                <div class="form-group">
+                    <label for="precioAnterior">Precio Anterior</label>
+                    <input type="number" step=".01" class="form-control" id="precioAnterior" [(ngModel)]="selectedPrecioAnterior" name="precioAnterior">
+                </div>
+
+                <div class="form-group">
+                    <label for="costo">Costo</label>
+                    <input type="number" step=".01" class="form-control" id="costo" [(ngModel)]="selectedCosto" name="costo">
+                </div>
+
+                <div class="form-group">
+                    <label for="ancho">Ancho</label>
+                    <input type="number" step=".01" class="form-control" id="ancho" [(ngModel)]="selectedAncho" name="ancho">
+                </div>
+
+                <div class="form-group">
+                    <label for="alto">Alto</label>
+                    <input type="number" step=".01" class="form-control" id="alto" [(ngModel)]="selectedAlto" name="alto">
+                </div>
+
+                <div class="form-group">
+                    <label for="profundo">Profundo</label>
+                    <input type="number" step=".01" class="form-control" id="profundo" [(ngModel)]="selectedProfundo" name="profundo">
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock</label>
+                    <input type="number" step=".01" class="form-control" id="stock" [(ngModel)]="selectedStock" name="stock">
+                </div>
+
+                <div *ngIf="proveedores && proveedores.length > 0">
+                    <label for="proveedor">Proveedor</label>
+                    <ng-select [items]="proveedores" (change)="addFilters();"
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedProveedor" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+
+                <div *ngIf="tipos && tipos.length > 0">
+                    <label for="tipo">Tipo</label>
+                    <ng-select [items]="tipos"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedTipo" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+                <div *ngIf="modelosFilter && modelosFilter.length > 0">
+                    <label for="modelo">Modelo</label>
+                    <ng-select [items]="modelosFilter"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedModelo" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+                <div *ngIf="coloresFilter && coloresFilter.length > 0">
+                    <label for="color">Color</label>
+                    <ng-select [items]="coloresFilter"  
+                                bindLabel="nombre"
+                                [multiple]="false"
+                                [(ngModel)]="selectedColor" [ngModelOptions]="{standalone:true}">
+                    </ng-select>
+                </div>
+          
+              </form>
+            </div>
+          </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); updateArticulo();">Editar</button>
+    </div>
+</ng-template>
+

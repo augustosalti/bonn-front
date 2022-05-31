@@ -1,0 +1,115 @@
+<div class="card m-0">
+    <div class="card-body">
+        <div class="right">
+            <button class="btn btn-lg btn-outline-primary float-right" (click)="openModal(itemModal)"><i class="mdi mdi-bookmark-plus"></i> Nuevo</button>
+            <!-- <input type="text" placeholder="{{'Search'|translate}}" id="actividad" class="form-control busqueda" [(ngModel)]='searchTerm'> -->
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center bg-white" *ngIf='!items'>
+    <div class="spinner-border text-primary mb-3" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+ <div class="table-responsive" *ngIf="items">
+    <table class="table bg-white table-hover align-middle mb-0 no-wrap">
+        <thead>
+            <tr class="titulosLista">
+                <th role="button" scope="col"><i class="mdi mdi-rename-box"></i> Nombre</th>
+                <th scope="col"><i class="mdi mdi-factory"></i> Descripcion</th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='let item of items | slice: (page-1) * 5 : (page-1) * 5 + pageSize ; let i = index;' id="{{ item.id }}"
+            (click)="openModal(editItemModal, item)">
+                <td class="align-middle">
+                    <span>{{ item.nombre }}</span>
+                </td>
+                <td class="align-middle">
+                    <span>{{ item.descripcion }}</span>
+                </td>
+                <td class="align-middle" style="cursor: pointer;" (click)="deleteTipo(item.id); $event.stopPropagation();">
+                    <span style="color: red;">X</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="collectionSize > 1" class="d-flex justify-content-center p-2 pt-3 bg-white border-top">
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+            <ng-template ngbPaginationFirst><i class="mdi mdi-arrow-left-bold-circle"></i></ng-template>
+            <ng-template ngbPaginationLast><i class="mdi mdi-arrow-right-bold-circle"></i></ng-template>
+            <ng-template ngbPaginationPrevious><i class="mdi mdi-arrow-left"></i></ng-template>
+            <ng-template ngbPaginationNext><i class="mdi mdi-arrow-right"></i></ng-template>
+            <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+            <ng-template ngbPaginationEllipsis>...</ng-template>
+        </ngb-pagination>
+    </div>
+</div>
+
+
+
+
+<ng-template #itemModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Tipo</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      
+        <div class="container">
+            <div [hidden]="submitted">
+              <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+                <div class="form-group">
+                  <label for="name">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" required [(ngModel)]="selectedNombre" name="nombre" #name="ngModel">
+                </div>
+          
+                <div class="form-group">
+                    <label for="nombre">Descripcion</label>
+                    <input type="text" class="form-control" id="descripcion" [(ngModel)]="selectedDescripcion" name="descripcion">
+                </div>
+          
+              </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); addTipo();">Guardar</button>
+    </div>
+</ng-template>
+
+
+ <ng-template #editItemModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Producto</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      
+        <div class="container">
+            <div [hidden]="submitted">
+              <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+                <div class="form-group">
+                  <label for="name">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" required [(ngModel)]="selectedNombre" name="nombre" #name="ngModel">
+                </div>
+          
+                <div class="form-group">
+                  <label for="nombre">Descripcion</label>
+                  <input type="text" class="form-control" id="descripcion" [(ngModel)]="selectedDescripcion" name="descripcion">
+                </div>
+
+              </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); updateTipo();">Editar</button>
+    </div>
+</ng-template>
+
