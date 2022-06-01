@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   //api: "http://localhost:8888/bonn-app/public/",
-  api: "https://nuttech.com.ar/nuttech.com.ar/buby/bonn-app-/bonn-app/public/",
+  api: "http://localhost/tuadministrador.es/PRUEBAS-AUGUSTO/bonn-app/public/",
   version: 'v1'
 };
 

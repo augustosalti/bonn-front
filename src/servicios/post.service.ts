@@ -46,8 +46,6 @@ export class PostService {
         this.obtenToken().toPromise().then(
           async (result: any) => {
               const authorization = result.token;
-              console.log(authorization);
-              //const authorization = "Bearer eyAiYWxnIjogIkhTMjU2IiwgInR5cCI6ICJKV1QifQ.ewogICAgICAgICAgICAgICAgImlkX2NsaWVudGUiIDogIjEiLAogICAgICAgICAgICAgICAgImlhdCI6IDE2NTM5MzYzNDQsCiAgICAgICAgICAgICAgICAiZXhwIjogMTY4NTQ3MjM0NAogICAgICAgICAgICAgICAgfQ.yeP8nzmtgT5WxSd2jybxX-QT_etDUAHJAY0UlpOAKM0";
               const headers = {Authorization: authorization, 'Content-Type':  'application/json'};
               this.http.post<any>(urlaux, body , { headers }).pipe(take(1)).subscribe(
                 (datosRead: any) => {
