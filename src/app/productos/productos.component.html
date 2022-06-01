@@ -29,7 +29,7 @@
         </thead>
         <tbody>
             <tr *ngFor='let item of items | slice: (page-1) * 5 : (page-1) * 5 + pageSize ; let i = index;' id="{{ item.id }}"
-            (click)="openModal(editItemModal, item)">
+            (click)="openModal(editItemModal, item)" class="pointer">
                 <td>
                     <span class="text-dark font-medium font-16">{{ item.codigo }}</span>
                 </td>
@@ -51,7 +51,7 @@
                 <td class="align-middle">
                     <span *ngIf="item.stock">{{ item.stock }}</span>
                 </td>
-                <td class="align-middle" style="cursor: pointer;" (click)="deleteArticulo(item.id); $event.stopPropagation();">
+                <td class="align-middle pointer" (click)="deleteArticulo(item.id); $event.stopPropagation();">
                     <span style="color: red;">X</span>
                 </td>
             </tr>
